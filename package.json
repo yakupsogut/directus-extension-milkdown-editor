@@ -1,0 +1,37 @@
+{
+	"name": "milkdown-editor",
+	"description": "Please enter a description for your extension",
+	"icon": "extension",
+	"version": "1.0.0",
+	"keywords": [
+		"directus",
+		"directus-extension",
+		"directus-extension-interface"
+	],
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"directus:extension": {
+		"type": "interface",
+		"path": "dist/index.js",
+		"source": "src/index.js",
+		"host": "^10.10.0"
+	},
+	"scripts": {
+		"build": "directus-extension build",
+		"dev": "directus-extension build -w --no-minify",
+		"link": "directus-extension link",
+		"validate": "directus-extension validate"
+	},
+	"devDependencies": {
+		"@directus/extensions-sdk": "17.0.9",
+		"postcss": "^8.5.6",
+		"postcss-cli": "^11.0.1",
+		"postcss-import": "^16.1.1",
+		"vue": "^3.5.29"
+	},
+	"dependencies": {
+		"@milkdown/crepe": "^7.18.0"
+	}
+}
