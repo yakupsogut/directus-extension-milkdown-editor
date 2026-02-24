@@ -3,7 +3,7 @@ import InterfaceComponent from './interface.vue';
 export default {
 	id: 'milkdown-editor',
 	name: 'Milkdown Editor',
-	icon: 'box',
+	icon: 'edit_document',
 	description: 'A WYSIWYG editor based on Milkdown.',
 	component: InterfaceComponent,
 	options: [

@@ -1,8 +1,10 @@
 {
-	"name": "milkdown-editor",
-	"description": "Please enter a description for your extension",
-	"icon": "extension",
+	"name": "directus-extension-milkdown-editor",
+	"description": "Provide a WYSIWYG markdown editing experience in Directus using Milkdown (Crepe) with direct image upload support.",
+	"icon": "edit_document",
 	"version": "1.0.0",
+	"author": "Yakup Sogut <yakup_sogut@hotmail.com>",
+	"license": "MIT",
 	"keywords": [
 		"directus",
 		"directus-extension",
