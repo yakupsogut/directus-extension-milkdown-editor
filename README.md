@@ -1,6 +1,6 @@
 # Directus Extension: Milkdown Editor
 
-A powerful, beautiful, and highly customizable WYSIWYG Markdown editor interface for Directus, powered by [Milkdown](https://milkdown.dev/) and its [Crepe](https://github.com/Milkdown/crepe) theme.
+A powerful, beautiful, and highly customizable WYSIWYG Markdown editor interface for Directus, powered by [Milkdown](https://milkdown.dev/) and its [Crepe](https://github.com/Milkdown/milkdown) theme.
 
 ## Features
 

@@ -9,12 +9,26 @@ export default {
 	options: [
 		{
 			field: 'folder',
-			name: 'Resim Klasörü',
+			name: 'Image Folder',
 			type: 'uuid',
 			meta: {
-				width: 'full',
+				width: 'half',
 				interface: 'system-folder',
-				note: 'Editöre yüklenen resimlerin kaydedileceği klasör.',
+				note: 'Folder where images uploaded in the editor will be saved.',
+			},
+		},
+		{
+			field: 'editorHeight',
+			name: 'Editor Height (px)',
+			type: 'integer',
+			meta: {
+				width: 'half',
+				interface: 'input',
+				note: 'Fixed height in pixels. Leave empty for unlimited height.',
+				options: {
+					placeholder: 'e.g. 400',
+					min: 100,
+				},
 			},
 		},
 	],

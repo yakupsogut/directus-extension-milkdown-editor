@@ -1,9 +1,20 @@
 <template>
-	<div ref="editorRef" class="milkdown-editor-wrapper" :class="{ 'has-focus': isFocused }"></div>
+	<div
+		ref="wrapperRef"
+		class="milkdown-editor-wrapper"
+		:class="{ 'is-fullscreen': isFullscreen }"
+		:style="wrapperStyle"
+	>
+		<button class="fullscreen-toggle" @click="toggleFullscreen" :title="isFullscreen ? 'Küçült' : 'Tam Ekran'">
+			<svg v-if="!isFullscreen" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+			<svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10l7-7"/><path d="M3 21l7-7"/></svg>
+		</button>
+		<div ref="editorRef" class="milkdown-editor-content"></div>
+	</div>
 </template>
 
 <script>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useApi } from '@directus/extensions-sdk';
 import { Crepe } from '@milkdown/crepe';
 import { replaceAll } from '@milkdown/utils';
@@ -20,16 +31,51 @@ export default {
 			type: String,
 			default: null,
 		},
+		editorHeight: {
+			type: Number,
+			default: null,
+		},
 	},
 	emits: ['input'],
 	setup(props, { emit }) {
+		const wrapperRef = ref(null);
 		const editorRef = ref(null);
 		let crepe = null;
 		let isUpdating = false;
 		const isFocused = ref(false);
+		const isFullscreen = ref(false);
 		const api = useApi();
 
+		const wrapperStyle = computed(() => {
+			if (isFullscreen.value) return {};
+			if (props.editorHeight) {
+				return {
+					height: `${props.editorHeight}px`,
+					maxHeight: `${props.editorHeight}px`,
+					overflowY: 'auto',
+				};
+			}
+			return {};
+		});
+
+		function toggleFullscreen() {
+			isFullscreen.value = !isFullscreen.value;
+			if (isFullscreen.value) {
+				document.body.style.overflow = 'hidden';
+			} else {
+				document.body.style.overflow = '';
+			}
+		}
+
+		function handleEsc(e) {
+			if (e.key === 'Escape' && isFullscreen.value) {
+				toggleFullscreen();
+			}
+		}
+
 		onMounted(async () => {
+			document.addEventListener('keydown', handleEsc);
+
 			if (editorRef.value) {
 				crepe = new Crepe({
 					root: editorRef.value,
@@ -73,8 +119,6 @@ export default {
 				});
 
 				await crepe.create();
-				
-				// Optional: track focus if crepe exposes it, or we can just rely on css focus-within
 			}
 		});
 
@@ -89,32 +133,112 @@ export default {
 		});
 
 		onBeforeUnmount(() => {
+			document.removeEventListener('keydown', handleEsc);
+			document.body.style.overflow = '';
 			if (crepe) {
 				crepe.destroy();
 			}
 		});
 
-		return { editorRef, isFocused };
+		return { wrapperRef, editorRef, isFocused, isFullscreen, wrapperStyle, toggleFullscreen };
 	},
 };
 </script>
 
 <style scoped>
 .milkdown-editor-wrapper {
-	border: var(--border-width) solid var(--border-normal);
-	border-radius: var(--border-radius);
-	background: var(--background-page);
+	border: var(--theme--border-width, var(--border-width, 2px)) solid var(--theme--form--field--input--border-color, var(--border-normal, #d3dae4));
+	border-radius: var(--theme--border-radius, var(--border-radius, 6px));
+	background: var(--theme--form--field--input--background, var(--background-page, #fff));
 	min-height: 200px;
+	padding: 0;
 	transition: border-color var(--fast) var(--transition);
+	position: relative;
+}
+
+.milkdown-editor-content {
+	min-height: 200px;
+}
+
+.milkdown-editor-wrapper :deep(.milkdown-block-handle) {
+	z-index: 10;
+	left: 4px !important;
+	background: var(--theme--background, var(--background-page, #fff));
+	border: var(--theme--border-width, var(--border-width, 2px)) solid var(--theme--form--field--input--border-color, var(--border-normal, #d3dae4));
+	border-radius: var(--theme--border-radius, var(--border-radius, 6px));
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .milkdown-editor-wrapper:hover {
-	border-color: var(--border-normal-alt);
+	border-color: var(--theme--form--field--input--border-color-hover, var(--border-normal-alt, #a2b5cd));
 }
 
 .milkdown-editor-wrapper:focus-within {
-	border-color: var(--primary);
-	box-shadow: 0 0 0 4px var(--primary-10);
+	border-color: var(--theme--form--field--input--border-color-focus, var(--theme--primary, var(--primary, #6644ff)));
+	box-shadow: 0 0 0 var(--theme--form--field--input--box-shadow-color-focus-size, 4px) var(--theme--form--field--input--box-shadow-color-focus, var(--primary-10, rgba(102, 68, 255, 0.1)));
+}
+
+/* Fullscreen toggle button */
+.fullscreen-toggle {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	z-index: 20;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: none;
+	border-radius: var(--theme--border-radius, var(--border-radius, 6px));
+	background: var(--theme--background-accent, var(--background-normal, #f0f4f9));
+	color: var(--theme--foreground-subdued, var(--foreground-subdued, #a2b5cd));
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.2s, background 0.15s, color 0.15s;
+}
+
+.milkdown-editor-wrapper:hover .fullscreen-toggle,
+.milkdown-editor-wrapper:focus-within .fullscreen-toggle {
+	opacity: 1;
+}
+
+.fullscreen-toggle:hover {
+	background: var(--theme--primary, var(--primary, #6644ff));
+	color: #fff;
+}
+
+/* Fullscreen mode */
+.milkdown-editor-wrapper.is-fullscreen {
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	border-radius: 0;
+	border: none;
+	max-height: none !important;
+	height: auto !important;
+	min-height: 100vh;
+	background: var(--theme--background, var(--background-page, #fff));
+}
+
+.milkdown-editor-wrapper.is-fullscreen .milkdown-editor-content {
+	overflow-y: auto;
+	max-height: none;
+	flex: 1;
+}
+
+.milkdown-editor-wrapper.is-fullscreen .fullscreen-toggle {
+	opacity: 1;
+	position: fixed;
+	top: 16px;
+	right: 16px;
+	z-index: 10000;
+	background: var(--theme--background-accent, var(--background-normal, #f0f4f9));
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.milkdown-editor-wrapper.is-fullscreen :deep(.milkdown-block-handle) {
+	z-index: 10000;
 }
 
 /* Crepe theme overrides to match Directus */

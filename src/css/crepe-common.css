@@ -109,7 +109,8 @@ img.ProseMirror-separator {
 }
 
 .milkdown .ProseMirror {
-  padding: 10px 60px;
+  padding: 10px 45px;
+  padding-left: 85px;
 }
 
 .milkdown .ProseMirror *::-moz-selection {
