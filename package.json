@@ -2,14 +2,19 @@
 	"name": "directus-extension-milkdown-editor",
 	"description": "Provide a WYSIWYG markdown editing experience in Directus using Milkdown (Crepe) with direct image upload support.",
 	"icon": "edit_document",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"author": "Yakup Sogut <yakup_sogut@hotmail.com>",
 	"license": "MIT",
 	"keywords": [
 		"directus",
 		"directus-extension",
+		"directus:extension",
 		"directus-extension-interface"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/yakupsogut/directus-extension-milkdown-editor.git"
+	},
 	"type": "module",
 	"files": [
 		"dist"
