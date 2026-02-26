@@ -31,6 +31,31 @@ export default {
 				},
 			},
 		},
+		{
+			field: 'fontFamily',
+			name: 'Font Family',
+			type: 'string',
+			meta: {
+				width: 'half',
+				interface: 'select-dropdown',
+				note: 'Font used in the editor content.',
+				options: {
+					choices: [
+						{ text: 'System Default', value: '' },
+						{ text: 'Inter', value: "'Inter', sans-serif" },
+						{ text: 'Roboto', value: "'Roboto', sans-serif" },
+						{ text: 'Open Sans', value: "'Open Sans', sans-serif" },
+						{ text: 'Lato', value: "'Lato', sans-serif" },
+						{ text: 'Nunito', value: "'Nunito', sans-serif" },
+						{ text: 'Poppins', value: "'Poppins', sans-serif" },
+						{ text: 'Merriweather', value: "'Merriweather', serif" },
+						{ text: 'Georgia', value: "Georgia, serif" },
+						{ text: 'Monospace', value: "'Fira Code', monospace" },
+					],
+					allowOther: true,
+				},
+			},
+		},
 	],
 	types: ['text'],
 };

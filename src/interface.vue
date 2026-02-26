@@ -35,6 +35,10 @@ export default {
 			type: Number,
 			default: null,
 		},
+		fontFamily: {
+			type: String,
+			default: '',
+		},
 	},
 	emits: ['input'],
 	setup(props, { emit }) {
@@ -47,15 +51,16 @@ export default {
 		const api = useApi();
 
 		const wrapperStyle = computed(() => {
-			if (isFullscreen.value) return {};
-			if (props.editorHeight) {
-				return {
-					height: `${props.editorHeight}px`,
-					maxHeight: `${props.editorHeight}px`,
-					overflowY: 'auto',
-				};
+			const style = {};
+			if (!isFullscreen.value && props.editorHeight) {
+				style.height = `${props.editorHeight}px`;
+				style.maxHeight = `${props.editorHeight}px`;
+				style.overflowY = 'auto';
 			}
-			return {};
+			if (props.fontFamily) {
+				style['--milkdown-custom-font'] = props.fontFamily;
+			}
+			return style;
 		});
 
 		function toggleFullscreen() {
@@ -263,8 +268,8 @@ export default {
 	--crepe-color-inline-area: var(--theme--background-subdued, var(--background-normal-alt, #e2e8f0));
 
 	/* Fonts */
-	--crepe-font-default: var(--family-system);
-	--crepe-font-title: var(--family-system);
+	--crepe-font-default: var(--milkdown-custom-font, var(--family-system));
+	--crepe-font-title: var(--milkdown-custom-font, var(--family-system));
 	--crepe-font-code: var(--family-monospace);
 	
 	background: transparent;
