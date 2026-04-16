@@ -220,16 +220,15 @@ export default {
 	z-index: 9999;
 	border-radius: 0;
 	border: none;
-	max-height: none !important;
-	height: auto !important;
-	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 	background: var(--theme--background, var(--background-page, #fff));
 }
 
 .milkdown-editor-wrapper.is-fullscreen .milkdown-editor-content {
 	overflow-y: auto;
-	max-height: none;
 	flex: 1;
+	min-height: 0;
 }
 
 .milkdown-editor-wrapper.is-fullscreen .fullscreen-toggle {
